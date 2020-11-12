@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list_city.*
 import ru.vyakhirev.bellintegratortesttask.App
@@ -22,12 +24,10 @@ class ListCityFragment : Fragment(), MainView {
     lateinit var presenter: ListCityPresenter
 
     private lateinit var adapter: AdapterCity
-//    lateinit var listCityTemperature:List<CityTemperature>
 
-    private var listCityTemperature = listOf(
-        CityTemperature("None", 0)
-    )
+    private var listCityTemperature = mutableListOf<CityTemperature>()
 
+    private val cityTempLiveData = MutableLiveData<MutableList<CityTemperature>>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,9 +41,23 @@ class ListCityFragment : Fragment(), MainView {
         CityListComponent.create((requireActivity().applicationContext as App).getAppComponent())
             .inject(this)
         super.onViewCreated(view, savedInstanceState)
+
         presenter.attachView(this)
-        setupRecyclerView()
-        presenter.getWeatherByCity("Samara")
+
+        addBtn.setOnClickListener {
+            if (cityET.text.toString().length < 3)
+                showError("Error! Short city name!")
+            else
+                presenter.getWeatherByCity(cityET.text.toString())
+        }
+
+        cityTempLiveData.observe(
+            viewLifecycleOwner,
+            {
+                adapter.update(it)
+            }
+        )
+
     }
 
     private fun setupRecyclerView() {
@@ -75,14 +89,16 @@ class ListCityFragment : Fragment(), MainView {
 
     override fun populateCity(name: String, temper: Int) {
 
-        listCityTemperature = listOf(
-            CityTemperature(name, temper)
-        )
-        adapter.update(listCityTemperature)
+        listCityTemperature.add(CityTemperature(name, temper))
+
+        setupRecyclerView()
+        cityTempLiveData.value = listCityTemperature
+
+
     }
 
     override fun showError(errorText: String) {
-        TODO("Not yet implemented")
+        Toast.makeText(context, errorText, Toast.LENGTH_LONG).show()
     }
 
 }

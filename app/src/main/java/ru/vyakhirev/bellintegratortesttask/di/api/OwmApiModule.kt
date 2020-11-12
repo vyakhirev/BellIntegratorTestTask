@@ -1,4 +1,4 @@
-package ru.vyakhirev.bellintegratortesttask.di
+package ru.vyakhirev.bellintegratortesttask.di.api
 
 import androidx.multidex.BuildConfig
 import dagger.Module
@@ -20,7 +20,7 @@ class OwmApiModule {
     private val authInterceptor = Interceptor { chain ->
         val newUrl = chain.request().url
             .newBuilder()
-            .addQueryParameter("api_key", API_KEY)
+            .addQueryParameter("appid", API_KEY)
             .build()
 
         val newRequest = chain.request()
@@ -58,7 +58,7 @@ class OwmApiModule {
 
     @Singleton
     @Provides
-    fun provideFlickrApiService(): OwmApi {
+    fun provideOwnApiService(): OwmApi {
         return retrofit.create(OwmApi::class.java)
     }
 }

@@ -4,6 +4,6 @@ import io.reactivex.Single
 import ru.vyakhirev.bellintegratortesttask.data.model.WeatherResponse
 
 interface Repository {
-    fun getWeatherByCity(): Single<WeatherResponse>
-    fun getForecastByCity(): Single<WeatherResponse>
+    fun getWeatherByCity(query: String): Single<WeatherResponse>
+    fun getForecastByCity(query: String): Single<WeatherResponse>
 }

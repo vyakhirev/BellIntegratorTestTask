@@ -1,16 +1,17 @@
 package ru.vyakhirev.bellintegratortesttask.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list_city.*
 import ru.vyakhirev.bellintegratortesttask.App
 import ru.vyakhirev.bellintegratortesttask.R
+import ru.vyakhirev.bellintegratortesttask.data.model.CityModel
 import ru.vyakhirev.bellintegratortesttask.data.model.CityTemperature
 import ru.vyakhirev.bellintegratortesttask.di.CityList.CityListComponent
 import ru.vyakhirev.bellintegratortesttask.presentation.adapter.AdapterCity
@@ -27,7 +28,6 @@ class ListCityFragment : Fragment(), MainView {
 
     private var listCityTemperature = mutableListOf<CityTemperature>()
 
-    private val cityTempLiveData = MutableLiveData<MutableList<CityTemperature>>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,26 +38,43 @@ class ListCityFragment : Fragment(), MainView {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        CityListComponent.create((requireActivity().applicationContext as App).getAppComponent())
+        CityListComponent.create(
+            (requireActivity().applicationContext as App).getAppComponent()
+        )
             .inject(this)
         super.onViewCreated(view, savedInstanceState)
 
         presenter.attachView(this)
-
+//        presenter.insertCityToDb()
+//        setupRecyclerView()
         addBtn.setOnClickListener {
             if (cityET.text.toString().length < 3)
                 showError("Error! Short city name!")
-            else
-                presenter.getWeatherByCity(cityET.text.toString())
+            else {
+                presenter.apply {
+                    getWeatherByCity(cityET.text.toString())
+                    insertCityToDb(CityModel(cityET.text.toString()))
+                }
+            }
         }
 
-        cityTempLiveData.observe(
+        presenter.loadCitiesFromDb()
+        Log.d("virg7", presenter.observeCityList().value.toString())
+
+        presenter.observeCityInfo().observe(
             viewLifecycleOwner,
             {
+                Log.d("virg8", presenter.observeCityList().value.toString())
+            }
+        )
+        presenter.observeCityInfo().observe(
+            viewLifecycleOwner,
+            {
+                Log.d("kan2", it.toString())
+                listCityTemperature = it
                 adapter.update(it)
             }
         )
-
     }
 
     private fun setupRecyclerView() {
@@ -87,12 +104,11 @@ class ListCityFragment : Fragment(), MainView {
         cityRV.adapter = adapter
     }
 
-    override fun populateCity(name: String, temper: Int) {
+    override fun populateCity() {
 
-        listCityTemperature.add(CityTemperature(name, temper))
-
+//        listCityTemperature.add(CityTemperature(name, temper))
         setupRecyclerView()
-        cityTempLiveData.value = listCityTemperature
+//        cityTempLiveData.value = listCityTemperature
 
 
     }

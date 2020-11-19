@@ -16,7 +16,7 @@ open class App : Application() {
     }
 
     open fun getAppComponent(): AppComponent {
-        return appComponent ?: AppComponent.create().also {
+        return appComponent ?: AppComponent.create(this).also {
             appComponent = it
         }
     }

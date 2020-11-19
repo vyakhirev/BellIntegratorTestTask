@@ -16,7 +16,9 @@ interface CityListComponent {
     companion object {
 
         fun create(appComponent: AppComponent): CityListComponent {
-            return DaggerCityListComponent.builder().appComponent(appComponent).build()
+            return DaggerCityListComponent.builder()
+                .appComponent(appComponent)
+                .build()
         }
     }
 

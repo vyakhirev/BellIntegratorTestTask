@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list_city.*
 import ru.vyakhirev.bellintegratortesttask.App
 import ru.vyakhirev.bellintegratortesttask.R
-import ru.vyakhirev.bellintegratortesttask.data.model.CityModel
 import ru.vyakhirev.bellintegratortesttask.data.model.CityTemperature
 import ru.vyakhirev.bellintegratortesttask.di.CityList.CityListComponent
 import ru.vyakhirev.bellintegratortesttask.presentation.adapter.AdapterCity
@@ -26,7 +25,7 @@ class ListCityFragment : Fragment(), MainView {
 
     private lateinit var adapter: AdapterCity
 
-    private var listCityTemperature = mutableListOf<CityTemperature>()
+    private var listCityTemperature = listOf<CityTemperature>()
 
 
     override fun onCreateView(
@@ -45,28 +44,23 @@ class ListCityFragment : Fragment(), MainView {
         super.onViewCreated(view, savedInstanceState)
 
         presenter.attachView(this)
-//        presenter.insertCityToDb()
-//        setupRecyclerView()
+
         addBtn.setOnClickListener {
             if (cityET.text.toString().length < 3)
                 showError("Error! Short city name!")
             else {
-                presenter.apply {
-                    getWeatherByCity(cityET.text.toString())
-                    insertCityToDb(CityModel(cityET.text.toString()))
-                }
+                presenter.getWeatherByCity(cityET.text.toString().toLowerCase())
             }
         }
 
         presenter.loadCitiesFromDb()
-        Log.d("virg7", presenter.observeCityList().value.toString())
 
-        presenter.observeCityInfo().observe(
-            viewLifecycleOwner,
-            {
-                Log.d("virg8", presenter.observeCityList().value.toString())
-            }
-        )
+//        presenter.observeCityInfo().observe(
+//            viewLifecycleOwner,
+//            {
+//                Log.d("virg8", presenter.observeCityList().value.toString())
+//            }
+//        )
         presenter.observeCityInfo().observe(
             viewLifecycleOwner,
             {

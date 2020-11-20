@@ -1,9 +1,6 @@
 package ru.vyakhirev.bellintegratortesttask.data.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import io.reactivex.Completable
 import io.reactivex.Single
 import ru.vyakhirev.bellintegratortesttask.data.model.CityModel
@@ -18,6 +15,8 @@ interface CitiesDao {
     fun getAllcities(): Single<List<CityModel>>
 
     @Query("SELECT * FROM cities WHERE name=:name")
-    fun getUserById(name: String): Single<CityModel>
+    fun getCityByName(name: String): Single<CityModel>
 
+    @Delete
+    fun deleteCity(city: CityModel): Completable
 }

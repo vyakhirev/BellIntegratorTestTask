@@ -9,7 +9,7 @@ import ru.vyakhirev.bellintegratortesttask.data.model.CityTemperature
 
 class AdapterCity(
     private val context: Context,
-    private var citiesTemperature: MutableList<CityTemperature>,
+    private var citiesTemperature: List<CityTemperature>,
     val cityClick: ((city: CityTemperature) -> Unit)?,
 
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -44,7 +44,7 @@ class AdapterCity(
 
     }
 
-    fun update(data: MutableList<CityTemperature>) {
+    fun update(data: List<CityTemperature>) {
 //        val movieDiffUtilCallback = DiffCallback(photos, data)
 //        val diffResult = DiffUtil.calculateDiff(movieDiffUtilCallback)
 //        diffResult.dispatchUpdatesTo(this)

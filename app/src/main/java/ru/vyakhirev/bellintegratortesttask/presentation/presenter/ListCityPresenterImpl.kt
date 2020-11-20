@@ -1,7 +1,6 @@
 package ru.vyakhirev.bellintegratortesttask.presentation.presenter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -22,7 +21,7 @@ class ListCityPresenterImpl
     private var view: MainView? = null
     var disposable = CompositeDisposable()
 
-    val cityTempLiveData = MutableLiveData<MutableList<CityTemperature>>()
+    val cityTempLiveData = MutableLiveData<List<CityTemperature>>()
     var ct: MutableList<CityTemperature> = mutableListOf()
     var listCity = MutableLiveData<List<CityModel>>()
 
@@ -38,19 +37,19 @@ class ListCityPresenterImpl
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        Log.d("kan", "${it.name}====${it.main.temp}")
-                        view?.populateCity()
-
                         ct.add(CityTemperature(it.name, (it.main.temp!! - 273.0).toInt()))
-                        cityTempLiveData.value = ct
+                        cityTempLiveData.value = ct.distinct().sortedBy { name -> name.city }
                     },
                     {
                         view?.showError("City not found!")
+                        dao.deleteCity(CityModel(query))
+                            .subscribeOn(Schedulers.io())
+                            .subscribe()
                     }
                 )
-        )
 
-//    Log.d("virg3",observeCityList().value.toString())
+        )
+        insertCityToDb(CityModel(query))
     }
 
     override fun loadCitiesFromDb() {
@@ -63,17 +62,13 @@ class ListCityPresenterImpl
                         getWeatherByCity(it.name)
                     }
                 }
-                .subscribe(
-                    {
-                    },
-                    {
-                        Log.d("virg4", it.toString())
-                    })
+                .subscribe()
         )
     }
 
     override fun attachView(view: MainView) {
         this.view = view
+        view?.populateCity()
     }
 
     override fun detachView() {
@@ -82,15 +77,14 @@ class ListCityPresenterImpl
     }
 
     override fun insertCityToDb(city: CityModel) {
-        dao.insert(city).subscribeOn(Schedulers.io()).subscribe()
+        disposable.add(
+            dao.insert(city)
+                .subscribeOn(Schedulers.io())
+                .subscribe()
+        )
     }
 
-    override fun observeCityInfo(): MutableLiveData<MutableList<CityTemperature>> {
+    override fun observeCityInfo(): MutableLiveData<List<CityTemperature>> {
         return cityTempLiveData
     }
-
-    override fun observeCityList(): MutableLiveData<List<CityModel>> {
-        return listCity
-    }
-
 }

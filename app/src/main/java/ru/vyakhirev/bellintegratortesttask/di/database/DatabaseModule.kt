@@ -12,19 +12,19 @@ private const val DB_NAME = "CITIES"
 
 @Module
 class DatabaseModule(mApplication: Application) {
-    private val usersDatabase: CitiesDatabase = Room
+    private val citiesDatabase: CitiesDatabase = Room
         .databaseBuilder(mApplication, CitiesDatabase::class.java, DB_NAME)
         .build()
 
     @Singleton
     @Provides
     fun providesRoomDatabase(): CitiesDatabase {
-        return usersDatabase
+        return citiesDatabase
     }
 
     @Singleton
     @Provides
-    fun providescitiesDao(citiesDatabase: CitiesDatabase): CitiesDao {
-        return usersDatabase.citiesDao()
+    fun providescitiesDao(): CitiesDao {
+        return this.citiesDatabase.citiesDao()
     }
 }

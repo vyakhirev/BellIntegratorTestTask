@@ -3,6 +3,7 @@ package ru.vyakhirev.bellintegratortesttask.data.repository
 import io.reactivex.Single
 import ru.vyakhirev.bellintegratortesttask.data.api.OwmApi
 import ru.vyakhirev.bellintegratortesttask.data.model.WeatherResponse
+import ru.vyakhirev.bellintegratortesttask.data.model.forecast.ForecastResponse
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
@@ -13,8 +14,8 @@ class RepositoryImpl @Inject constructor(
         return apiServise.getWeatherByCity(query)
     }
 
-    override fun getForecastByCity(query: String): Single<WeatherResponse> {
-        TODO("Not yet implemented")
+    override fun getForecastByCity(query: String): Single<ForecastResponse> {
+        return apiServise.getForecastByCity(query)
     }
 
 }

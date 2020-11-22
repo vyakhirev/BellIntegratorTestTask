@@ -11,14 +11,6 @@ import javax.inject.Singleton
 )
 interface DatabaseComponent {
 
-//    companion object {
-//        fun create(databaseModule: DatabaseModule,application: Application): DatabaseComponent {
-//            return DaggerDatabaseComponent.builder()
-//                .databaseModule(DatabaseModule(application))
-//                .build()
-//        }
-//    }
-
     fun provideDatabase(): CitiesDatabase
 
     fun usersDao(): CitiesDao

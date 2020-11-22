@@ -21,6 +21,4 @@ interface ListCityPresenter {
 
     fun observeCityInfo(): MutableLiveData<List<CityTemperature>>
 
-//    fun observeCityList(): MutableLiveData<List<CityModel>>
-//    fun lictCityObserver():MutableLiveData<MutableList<CityTemperature>>
 }

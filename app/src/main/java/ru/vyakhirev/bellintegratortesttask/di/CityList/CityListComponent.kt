@@ -2,8 +2,8 @@ package ru.vyakhirev.bellintegratortesttask.di.CityList
 
 import dagger.Component
 import ru.vyakhirev.bellintegratortesttask.di.AppComponent
+import ru.vyakhirev.bellintegratortesttask.di.FeatureScope
 import ru.vyakhirev.bellintegratortesttask.presentation.ListCityFragment
-import ru.vyakhirev.bellintegratortesttask.presentation.MainActivity
 
 @Component(
     dependencies = [AppComponent::class],
@@ -22,7 +22,7 @@ interface CityListComponent {
         }
     }
 
-    fun inject(mainActivity: MainActivity)
+//    fun inject(mainActivity: MainActivity)
 
     fun inject(listCityFragment: ListCityFragment)
 }

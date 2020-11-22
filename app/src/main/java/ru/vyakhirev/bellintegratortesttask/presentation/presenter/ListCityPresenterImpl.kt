@@ -23,7 +23,7 @@ class ListCityPresenterImpl
 
     val cityTempLiveData = MutableLiveData<List<CityTemperature>>()
     var ct: MutableList<CityTemperature> = mutableListOf()
-    var listCity = MutableLiveData<List<CityModel>>()
+//    var listCity = MutableLiveData<List<CityModel>>()
 
     override fun getForecastByCity(query: String) {
         TODO("Not yet implemented")
@@ -68,7 +68,7 @@ class ListCityPresenterImpl
 
     override fun attachView(view: MainView) {
         this.view = view
-        view?.populateCity()
+        view.populateCity()
     }
 
     override fun detachView() {

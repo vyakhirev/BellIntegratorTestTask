@@ -20,6 +20,10 @@ import javax.inject.Inject
 
 class ListCityFragment : Fragment(), MainView {
 
+    companion object {
+        const val CITY_NAME = "City_Name"
+    }
+
     @Inject
     lateinit var presenter: ListCityPresenter
 
@@ -50,17 +54,12 @@ class ListCityFragment : Fragment(), MainView {
                 showError("Error! Short city name!")
             else {
                 presenter.getWeatherByCity(cityET.text.toString().toLowerCase())
+                cityET.text.clear()
             }
         }
 
         presenter.loadCitiesFromDb()
 
-//        presenter.observeCityInfo().observe(
-//            viewLifecycleOwner,
-//            {
-//                Log.d("virg8", presenter.observeCityList().value.toString())
-//            }
-//        )
         presenter.observeCityInfo().observe(
             viewLifecycleOwner,
             {
@@ -77,21 +76,17 @@ class ListCityFragment : Fragment(), MainView {
                 requireContext(),
                 listCityTemperature,
                 cityClick = {
-//                    val bundle = Bundle()
-//                    bundle.apply {
-//                        Log.d("kan", it.avatar)
-//                        putString(AVATAR_URL, it.avatar)
-//                        putString(FIRST_NAME, it.first_name)
-//                        putString(LAST_NAME, it.last_name)
-//                        putString(EMAIL, it.email)
-//                    }
-//                    val userCardFragment = UserCardFragment()
-//                    userCardFragment.arguments = bundle
-//                    parentFragmentManager
-//                        .beginTransaction()
-//                        .replace(R.id.fragmentContainer, userCardFragment)
-//                        .addToBackStack(null)
-//                        .commit()
+                    val bundle = Bundle()
+                    bundle.apply {
+                        putString(CITY_NAME, it.city)
+                    }
+                    val detailCityFragment = DetailCityFragment()
+                    detailCityFragment.arguments = bundle
+                    parentFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.fragmentContainer, detailCityFragment)
+                        .addToBackStack(null)
+                        .commit()
                 }
             )
         cityRV.layoutManager = LinearLayoutManager(context)
@@ -100,11 +95,7 @@ class ListCityFragment : Fragment(), MainView {
 
     override fun populateCity() {
 
-//        listCityTemperature.add(CityTemperature(name, temper))
         setupRecyclerView()
-//        cityTempLiveData.value = listCityTemperature
-
-
     }
 
     override fun showError(errorText: String) {

@@ -4,6 +4,7 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.vyakhirev.bellintegratortesttask.data.model.WeatherResponse
+import ru.vyakhirev.bellintegratortesttask.data.model.forecast.ForecastResponse
 
 interface OwmApi {
     @GET("weather")
@@ -16,5 +17,5 @@ interface OwmApi {
     fun getForecastByCity(
         @Query("q") city: String,
         @Query("lang") lang: String = "ru"
-    ): Single<WeatherResponse>
+    ): Single<ForecastResponse>
 }

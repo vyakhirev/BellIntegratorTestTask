@@ -1,4 +1,4 @@
-package ru.vyakhirev.bellintegratortesttask.di.CityList
+package ru.vyakhirev.bellintegratortesttask.di
 
 import javax.inject.Scope
 

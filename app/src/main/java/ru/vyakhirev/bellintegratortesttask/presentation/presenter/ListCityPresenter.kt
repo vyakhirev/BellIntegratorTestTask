@@ -21,4 +21,5 @@ interface ListCityPresenter {
 
     fun observeCityInfo(): MutableLiveData<List<CityTemperature>>
 
+
 }

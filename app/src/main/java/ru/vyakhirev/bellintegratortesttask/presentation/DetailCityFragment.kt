@@ -25,8 +25,10 @@ class DetailCityFragment : Fragment(), MainView {
         )
             .inject(this)
         super.onViewCreated(view, savedInstanceState)
-        val cityName = arguments?.getString(ListCityFragment.CITY_NAME)!!
 
+        retainInstance = true
+        val cityName =
+            arguments?.getString(ListCityFragment.CITY_NAME) ?: presenter.retainCityName()
         presenter.attachView(this)
         presenter.getForecastByCity(cityName)
 //        det_city_name_TV.text =

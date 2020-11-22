@@ -51,4 +51,8 @@ class DetailCityPresenterImpl
         return forecastLiveData
     }
 
+    override fun retainCityName(): String {
+        return forecastLiveData.value?.city?.cityName.toString()
+    }
+
 }

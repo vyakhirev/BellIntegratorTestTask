@@ -13,4 +13,6 @@ interface DetailCityPresenter {
     fun detachView()
 
     fun observeForecastLD(): LiveData<ForecastResponse>
+
+    fun retainCityName(): String
 }

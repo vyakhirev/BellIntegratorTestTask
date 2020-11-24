@@ -5,4 +5,5 @@
     <string name="Error_Loading_data">Error loading data</string>
     <string name="Error">Error</string>
     <string name="data_is_loading">Data is loading…</string>
+    <string name="error">Error</string>
 </resources>

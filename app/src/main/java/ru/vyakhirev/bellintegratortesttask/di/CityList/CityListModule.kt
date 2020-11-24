@@ -11,6 +11,19 @@ import ru.vyakhirev.bellintegratortesttask.presentation.presenter.ListCityPresen
 @Module
 abstract class CityListModule {
 
+//    companion object{
+//        @JvmStatic
+//        @Provides
+//        fun provideConnectivityManager(context: Context): ConnectivityManager =
+//            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//
+//
+//        @JvmStatic
+//        @Provides
+//        fun provideConectivityLiveData(context: Context, connectivityManager: ConnectivityManager): ConnectivityLiveData =
+//            ConnectivityLiveData(connectivityManager)
+//    }
+
     @Binds
     @Reusable
     abstract fun bindsCityListPresenter(listCityPresenterImpl: ListCityPresenterImpl): ListCityPresenter

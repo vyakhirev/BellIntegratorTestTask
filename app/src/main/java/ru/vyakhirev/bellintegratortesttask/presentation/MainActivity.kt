@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import ru.vyakhirev.bellintegratortesttask.R
 
+
 class MainActivity : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("ferz", "Fragment list")
             openFragment(ListCityFragment())
         }
+
     }
 
     private fun openFragment(fragment: Fragment) {

@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list_city.*
 import ru.vyakhirev.bellintegratortesttask.App
 import ru.vyakhirev.bellintegratortesttask.R
+import ru.vyakhirev.bellintegratortesttask.data.model.CityModel
 import ru.vyakhirev.bellintegratortesttask.data.model.CityTemperature
 import ru.vyakhirev.bellintegratortesttask.di.CityList.CityListComponent
 import ru.vyakhirev.bellintegratortesttask.presentation.adapter.AdapterCity
 import ru.vyakhirev.bellintegratortesttask.presentation.presenter.ListCityPresenter
 import ru.vyakhirev.bellintegratortesttask.presentation.view.MainView
+import ru.vyakhirev.bellintegratortesttask.util.ConnectivityLiveData
 import javax.inject.Inject
 
 class ListCityFragment : Fragment(), MainView {
@@ -24,10 +26,14 @@ class ListCityFragment : Fragment(), MainView {
         const val CITY_NAME = "City_Name"
     }
 
+//    @Inject
+//    lateinit var connectivityLiveData: ConnectivityLiveData
+
     @Inject
     lateinit var presenter: ListCityPresenter
 
     private lateinit var adapter: AdapterCity
+    private lateinit var connectivityLiveData: ConnectivityLiveData
 
     private var listCityTemperature = listOf<CityTemperature>()
 
@@ -46,6 +52,26 @@ class ListCityFragment : Fragment(), MainView {
         )
             .inject(this)
         super.onViewCreated(view, savedInstanceState)
+
+        connectivityLiveData = ConnectivityLiveData(requireContext())
+        connectivityLiveData.observe(viewLifecycleOwner,
+            { isAvailable ->
+                when (isAvailable) {
+                    true -> {
+                        Log.d("perchun1", "true")
+                        errorImg.visibility = View.GONE
+                        errorTV.visibility = View.GONE
+                        cityRV.visibility = View.VISIBLE
+                        presenter.loadCitiesFromDb()
+                    }
+                    false -> {
+                        Log.d("perchun2", "false")
+                        errorImg.visibility = View.VISIBLE
+                        errorTV.visibility = View.VISIBLE
+                        cityRV.visibility = View.GONE
+                    }
+                }
+            })
 
         presenter.attachView(this)
 
@@ -94,12 +120,14 @@ class ListCityFragment : Fragment(), MainView {
     }
 
     override fun populateCity() {
-
+        presenter.insertCityToDb(CityModel("Moscow"))
+        presenter.insertCityToDb(CityModel("Paris"))
         setupRecyclerView()
     }
 
     override fun showError(errorText: String) {
         Toast.makeText(context, errorText, Toast.LENGTH_LONG).show()
+
     }
 
 }

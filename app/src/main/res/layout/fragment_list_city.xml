@@ -34,6 +34,29 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cityET" />
 
+    <ImageView
+        android:id="@+id/errorImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/Error"
+        android:paddingTop="66dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cityET"
+        app:srcCompat="@drawable/ic_error" />
+
+    <TextView
+        android:id="@+id/errorTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/padding_16dp"
+        android:text="No internet connection"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/errorImg" />
+
     <ProgressBar
         android:id="@+id/users_loading_PB"
         style="?android:attr/progressBarStyle"
@@ -45,27 +68,5 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/errorImg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/Error"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_error" />
-
-    <TextView
-        android:id="@+id/errorTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Error_Loading_data"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="@id/errorImg"
-        app:layout_constraintRight_toRightOf="@id/errorImg"
-        app:layout_constraintTop_toBottomOf="@+id/errorImg" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
     private val apiServise: OwmApi
-//    private val weatherDao:
 ) : Repository {
     override fun getWeatherByCity(query: String): Single<WeatherResponse> {
         return apiServise.getWeatherByCity(query)

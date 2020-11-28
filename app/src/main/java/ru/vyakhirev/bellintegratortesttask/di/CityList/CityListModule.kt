@@ -15,7 +15,7 @@ abstract class CityListModule {
 //        @JvmStatic
 //        @Provides
 //        fun provideConnectivityManager(context: Context): ConnectivityManager =
-//            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//              context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 //
 //
 //        @JvmStatic

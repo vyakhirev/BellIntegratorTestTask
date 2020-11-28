@@ -1,6 +1,7 @@
 package ru.vyakhirev.bellintegratortesttask.presentation.presenter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -39,6 +40,14 @@ class ListCityPresenterImpl
                     {
                         ct.add(CityTemperature(it.name, (it.main.temp!! - 273.0).toInt()))
                         cityTempLiveData.value = ct.distinct().sortedBy { name -> name.city }
+                        dao.insertCityTemp(
+                            CityTemperature(
+                                it.name,
+                                (it.main.temp!! - 273.0).toInt()
+                            )
+                        )
+                            .subscribeOn(Schedulers.io())
+                            .subscribe()
                     },
                     {
                         view?.showError("City not found!")
@@ -52,7 +61,20 @@ class ListCityPresenterImpl
         insertCityToDb(CityModel(query))
     }
 
+    @SuppressLint("CheckResult")
+    override fun getWeatherFromDB() {
+        dao.getAllCitiesTemp()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                cityTempLiveData.value = it
+            }, {
+                view?.showError("City not found!")
+            })
+    }
+
     override fun loadCitiesFromDb() {
+        Log.d("kavt", "loadCitiesFromDb()")
         disposable.add(
             dao.getAllcities()
                 .subscribeOn(Schedulers.io())
@@ -72,13 +94,14 @@ class ListCityPresenterImpl
     }
 
     override fun detachView() {
+        Log.d("kavt", "View detached")
         view = null
         disposable.clear()
     }
 
     override fun insertCityToDb(city: CityModel) {
         disposable.add(
-            dao.insert(city)
+            dao.insertCityName(city)
                 .subscribeOn(Schedulers.io())
                 .subscribe()
         )
@@ -87,4 +110,6 @@ class ListCityPresenterImpl
     override fun observeCityInfo(): MutableLiveData<List<CityTemperature>> {
         return cityTempLiveData
     }
+
+
 }

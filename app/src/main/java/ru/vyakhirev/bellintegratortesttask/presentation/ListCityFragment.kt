@@ -1,5 +1,10 @@
 package ru.vyakhirev.bellintegratortesttask.presentation
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +13,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_list_city.*
 import ru.vyakhirev.bellintegratortesttask.App
 import ru.vyakhirev.bellintegratortesttask.R
@@ -17,7 +25,6 @@ import ru.vyakhirev.bellintegratortesttask.di.CityList.CityListComponent
 import ru.vyakhirev.bellintegratortesttask.presentation.adapter.AdapterCity
 import ru.vyakhirev.bellintegratortesttask.presentation.presenter.ListCityPresenter
 import ru.vyakhirev.bellintegratortesttask.presentation.view.MainView
-import ru.vyakhirev.bellintegratortesttask.util.ConnectivityLiveData
 import javax.inject.Inject
 
 class ListCityFragment : Fragment(), MainView {
@@ -26,17 +33,11 @@ class ListCityFragment : Fragment(), MainView {
         const val CITY_NAME = "City_Name"
     }
 
-//    @Inject
-//    lateinit var connectivityLiveData: ConnectivityLiveData
-
     @Inject
     lateinit var presenter: ListCityPresenter
 
     private lateinit var adapter: AdapterCity
-    private lateinit var connectivityLiveData: ConnectivityLiveData
-
     private var listCityTemperature = listOf<CityTemperature>()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,28 +54,14 @@ class ListCityFragment : Fragment(), MainView {
             .inject(this)
         super.onViewCreated(view, savedInstanceState)
 
-        connectivityLiveData = ConnectivityLiveData(requireContext())
-        connectivityLiveData.observe(viewLifecycleOwner,
-            { isAvailable ->
-                when (isAvailable) {
-                    true -> {
-                        Log.d("perchun1", "true")
-                        errorImg.visibility = View.GONE
-                        errorTV.visibility = View.GONE
-                        cityRV.visibility = View.VISIBLE
-                        presenter.loadCitiesFromDb()
-                    }
-                    false -> {
-                        Log.d("perchun2", "false")
-                        errorImg.visibility = View.VISIBLE
-                        errorTV.visibility = View.VISIBLE
-                        cityRV.visibility = View.GONE
-                    }
-                }
-            })
-
         presenter.attachView(this)
+        presenter.loadCitiesFromDb()
+        populateCity()
 
+        updateWeather(requireContext())
+
+        var hasNet = isOnline(requireContext())
+        Log.d("kavt", "Isonline= $hasNet")
         addBtn.setOnClickListener {
             if (cityET.text.toString().length < 3)
                 showError("Error! Short city name!")
@@ -84,7 +71,6 @@ class ListCityFragment : Fragment(), MainView {
             }
         }
 
-        presenter.loadCitiesFromDb()
 
         presenter.observeCityInfo().observe(
             viewLifecycleOwner,
@@ -94,6 +80,76 @@ class ListCityFragment : Fragment(), MainView {
                 adapter.update(it)
             }
         )
+//        context?.let {
+//            it.bindService(
+//                Intent(it, WeatherUpdateService::class.java),
+//                mConnection,
+//                Context.BIND_AUTO_CREATE
+//            )
+//        }
+
+//        connectivityLiveData = ConnectivityLiveData(requireContext())
+//        connectivityLiveData.observe(viewLifecycleOwner,
+//            { isAvailable ->
+//                when (isAvailable) {
+//                    true -> {
+//                        Log.d("perchun1", "true")
+//                        errorImg.visibility = View.GONE
+//                        errorTV.visibility = View.GONE
+//                        cityRV.visibility = View.VISIBLE
+//                        presenter.loadCitiesFromDb()
+//                    }
+//                    false -> {
+//                        Log.d("perchun2", "false")
+//                        errorImg.visibility = View.VISIBLE
+//                        errorTV.visibility = View.VISIBLE
+////                        cityRV.visibility = View.GONE
+//                        presenter.getWeatherFromDB()
+//                    }
+//                }
+//            })
+
+
+    }
+
+    @SuppressLint("CheckResult")
+    private fun updateWeather(context: Context) {
+        Observable.timer(5000, java.util.concurrent.TimeUnit.MILLISECONDS)
+            .repeat() //to perform your task every 5 seconds
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                if (isOnline(context))
+                    presenter.loadCitiesFromDb()
+            }
+    }
+
+    private fun isOnline(context: Context): Boolean {
+        var result = false
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val actNw =
+                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            result = when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            connectivityManager.activeNetworkInfo?.run {
+                result = when (type) {
+                    ConnectivityManager.TYPE_WIFI -> true
+                    ConnectivityManager.TYPE_MOBILE -> true
+                    ConnectivityManager.TYPE_ETHERNET -> true
+                    else -> false
+                }
+
+            }
+        }
+        return result
     }
 
     private fun setupRecyclerView() {
@@ -121,13 +177,14 @@ class ListCityFragment : Fragment(), MainView {
 
     override fun populateCity() {
         presenter.insertCityToDb(CityModel("Moscow"))
+        presenter.insertCityToDb(CityModel("Saint Petersburg"))
         presenter.insertCityToDb(CityModel("Paris"))
         setupRecyclerView()
     }
 
     override fun showError(errorText: String) {
-        Toast.makeText(context, errorText, Toast.LENGTH_LONG).show()
 
+        Toast.makeText(context, errorText, Toast.LENGTH_LONG).show()
     }
 
 }

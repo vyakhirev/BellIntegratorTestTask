@@ -1,6 +1,5 @@
 package ru.vyakhirev.bellintegratortesttask.di.api
 
-import androidx.multidex.BuildConfig
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -9,6 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.vyakhirev.bellintegratortesttask.BuildConfig
 import ru.vyakhirev.bellintegratortesttask.data.api.OwmApi
 import javax.inject.Singleton
 

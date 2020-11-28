@@ -11,6 +11,8 @@ interface ListCityPresenter {
 
     fun getWeatherByCity(query: String)
 
+    fun getWeatherFromDB()
+
     fun attachView(view: MainView)
 
     fun detachView()
@@ -20,6 +22,5 @@ interface ListCityPresenter {
     fun loadCitiesFromDb()
 
     fun observeCityInfo(): MutableLiveData<List<CityTemperature>>
-
 
 }

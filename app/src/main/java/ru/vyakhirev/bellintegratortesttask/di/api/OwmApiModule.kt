@@ -14,6 +14,7 @@ import javax.inject.Singleton
 
 @Module
 class OwmApiModule {
+
     private val BASE_URL = "https://api.openweathermap.org/data/2.5/"
     private val API_KEY = "489d623dc65e4c877935fec74cb8f7ef"
 

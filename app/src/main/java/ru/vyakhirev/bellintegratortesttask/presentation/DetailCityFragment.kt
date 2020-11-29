@@ -27,13 +27,12 @@ class DetailCityFragment : Fragment(), MainView {
         super.onViewCreated(view, savedInstanceState)
 
         retainInstance = true
+
         val cityName =
             arguments?.getString(ListCityFragment.CITY_NAME) ?: presenter.retainCityName()
+
         presenter.attachView(this)
         presenter.getForecastByCity(cityName)
-//        det_city_name_TV.text =
-
-//            cityInfo.append(arguments?.getString(ListCityFragment.CITY_NAME))
 
         presenter.observeForecastLD().observe(
             viewLifecycleOwner,
@@ -65,7 +64,7 @@ class DetailCityFragment : Fragment(), MainView {
     override fun populateCity() {
     }
 
-    override fun showError(errorText: String) {
+    override fun showMessage(errorText: String) {
     }
 
 }

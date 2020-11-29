@@ -6,7 +6,6 @@ import ru.vyakhirev.bellintegratortesttask.di.AppComponent
 open class App : Application() {
 
     companion object {
-
         private var appComponent: AppComponent? = null
     }
 

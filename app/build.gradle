@@ -87,12 +87,6 @@ dependencies {
         testImplementation 'junit:junit:4.13'
         androidTestImplementation 'androidx.test.ext:junit:1.1.2'
 
-        // WorkManager
-        implementation "androidx.work:work-runtime:$work_version"
-        implementation "androidx.work:work-rxjava2:$work_version"
-        androidTestImplementation "androidx.work:work-testing:$work_version"
-        implementation "androidx.work:work-runtime-ktx:$work_version"
-
         //Cicerone
         implementation("com.github.terrakok:cicerone:$cicerone_version")
 

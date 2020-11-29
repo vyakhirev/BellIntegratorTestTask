@@ -7,7 +7,4 @@ import androidx.room.PrimaryKey
 data class CityModel(
     @PrimaryKey
     var name: String,
-) {
-//    @PrimaryKey(autoGenerate = true)
-//    var id : Int=0
-}
+)

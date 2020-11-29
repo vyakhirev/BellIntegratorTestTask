@@ -18,6 +18,9 @@ interface CitiesDao {
     @Query("SELECT * FROM cities_temperature")
     fun getAllCitiesTemp(): Single<List<CityTemperature>>
 
+    @Query("SELECT * FROM cities_temperature WHERE city=:name")
+    fun getCitiesTempFromDB(name: String): Single<CityTemperature>
+
     @Query("SELECT * FROM cities")
     fun getAllcities(): Single<List<CityModel>>
 

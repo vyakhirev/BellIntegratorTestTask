@@ -19,9 +19,8 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_list_city.*
 import ru.vyakhirev.bellintegratortesttask.App
 import ru.vyakhirev.bellintegratortesttask.R
-import ru.vyakhirev.bellintegratortesttask.data.model.CityModel
 import ru.vyakhirev.bellintegratortesttask.data.model.CityTemperature
-import ru.vyakhirev.bellintegratortesttask.di.CityList.CityListComponent
+import ru.vyakhirev.bellintegratortesttask.di.citylist.CityListComponent
 import ru.vyakhirev.bellintegratortesttask.presentation.adapter.AdapterCity
 import ru.vyakhirev.bellintegratortesttask.presentation.presenter.ListCityPresenter
 import ru.vyakhirev.bellintegratortesttask.presentation.view.MainView
@@ -55,22 +54,20 @@ class ListCityFragment : Fragment(), MainView {
         super.onViewCreated(view, savedInstanceState)
 
         presenter.attachView(this)
-        presenter.loadCitiesFromDb()
+        presenter.addPresetCitiesToDb()
+        presenter.getUsersAddCityTemp()
         populateCity()
 
         updateWeather(requireContext())
 
-        var hasNet = isOnline(requireContext())
-        Log.d("kavt", "Isonline= $hasNet")
         addBtn.setOnClickListener {
             if (cityET.text.toString().length < 3)
-                showError("Error! Short city name!")
+                showMessage("Error! Short city name!")
             else {
                 presenter.getWeatherByCity(cityET.text.toString().toLowerCase())
                 cityET.text.clear()
             }
         }
-
 
         presenter.observeCityInfo().observe(
             viewLifecycleOwner,
@@ -80,47 +77,20 @@ class ListCityFragment : Fragment(), MainView {
                 adapter.update(it)
             }
         )
-//        context?.let {
-//            it.bindService(
-//                Intent(it, WeatherUpdateService::class.java),
-//                mConnection,
-//                Context.BIND_AUTO_CREATE
-//            )
-//        }
-
-//        connectivityLiveData = ConnectivityLiveData(requireContext())
-//        connectivityLiveData.observe(viewLifecycleOwner,
-//            { isAvailable ->
-//                when (isAvailable) {
-//                    true -> {
-//                        Log.d("perchun1", "true")
-//                        errorImg.visibility = View.GONE
-//                        errorTV.visibility = View.GONE
-//                        cityRV.visibility = View.VISIBLE
-//                        presenter.loadCitiesFromDb()
-//                    }
-//                    false -> {
-//                        Log.d("perchun2", "false")
-//                        errorImg.visibility = View.VISIBLE
-//                        errorTV.visibility = View.VISIBLE
-////                        cityRV.visibility = View.GONE
-//                        presenter.getWeatherFromDB()
-//                    }
-//                }
-//            })
-
-
     }
 
     @SuppressLint("CheckResult")
     private fun updateWeather(context: Context) {
-        Observable.timer(5000, java.util.concurrent.TimeUnit.MILLISECONDS)
-            .repeat() //to perform your task every 5 seconds
+        Observable.timer(15000, java.util.concurrent.TimeUnit.MILLISECONDS)
+            .repeat()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                if (isOnline(context))
-                    presenter.loadCitiesFromDb()
+                if (isOnline(context)) {
+                    presenter.getUsersAddCityTemp()
+                    showMessage("Weather was updated")
+                } else
+                    showMessage("Offline mode! Check your internet connection!")
             }
     }
 
@@ -176,15 +146,11 @@ class ListCityFragment : Fragment(), MainView {
     }
 
     override fun populateCity() {
-        presenter.insertCityToDb(CityModel("Moscow"))
-        presenter.insertCityToDb(CityModel("Saint Petersburg"))
-        presenter.insertCityToDb(CityModel("Paris"))
         setupRecyclerView()
     }
 
-    override fun showError(errorText: String) {
-
-        Toast.makeText(context, errorText, Toast.LENGTH_LONG).show()
+    override fun showMessage(msgText: String) {
+        Toast.makeText(context, msgText, Toast.LENGTH_LONG).show()
     }
 
 }

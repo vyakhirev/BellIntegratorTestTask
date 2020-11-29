@@ -3,4 +3,4 @@ package ru.vyakhirev.bellintegratortesttask.di
 import javax.inject.Scope
 
 @Scope
-annotation class FeatureScope
+annotation class DetailsScope

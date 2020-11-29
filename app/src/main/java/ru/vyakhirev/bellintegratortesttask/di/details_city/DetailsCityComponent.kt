@@ -2,7 +2,7 @@ package ru.vyakhirev.bellintegratortesttask.di.details_city
 
 import dagger.Component
 import ru.vyakhirev.bellintegratortesttask.di.AppComponent
-import ru.vyakhirev.bellintegratortesttask.di.FeatureScope
+import ru.vyakhirev.bellintegratortesttask.di.DetailsScope
 import ru.vyakhirev.bellintegratortesttask.presentation.DetailCityFragment
 
 @Component(
@@ -10,7 +10,7 @@ import ru.vyakhirev.bellintegratortesttask.presentation.DetailCityFragment
     modules = [DetailsCityModule::class]
 )
 
-@FeatureScope
+@DetailsScope
 interface DetailsCityComponent {
 
     companion object {

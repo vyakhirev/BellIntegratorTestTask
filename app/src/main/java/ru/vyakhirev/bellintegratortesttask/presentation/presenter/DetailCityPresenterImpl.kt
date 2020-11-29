@@ -6,16 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import ru.vyakhirev.bellintegratortesttask.data.database.CitiesDao
 import ru.vyakhirev.bellintegratortesttask.data.model.forecast.ForecastResponse
-import ru.vyakhirev.bellintegratortesttask.data.repository.Repository
+import ru.vyakhirev.bellintegratortesttask.domain.GetForecastUseCase
 import ru.vyakhirev.bellintegratortesttask.presentation.view.MainView
 import javax.inject.Inject
 
 class DetailCityPresenterImpl
 @Inject constructor(
-    private val repository: Repository,
-    private val dao: CitiesDao
+    private val getForecastUseCase: GetForecastUseCase
 ) : DetailCityPresenter {
 
     private var view: MainView? = null
@@ -24,13 +22,11 @@ class DetailCityPresenterImpl
 
     override fun getForecastByCity(query: String) {
         disposable.add(
-            repository.getForecastByCity(query)
+            getForecastUseCase.execute(query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Log.d("log1", it.toString())
                     forecastLiveData.value = it
-
                 }, {
                     Log.d("log2", it.message.toString())
                 })

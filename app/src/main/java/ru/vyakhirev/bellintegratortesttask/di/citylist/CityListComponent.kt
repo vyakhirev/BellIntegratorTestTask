@@ -1,8 +1,8 @@
-package ru.vyakhirev.bellintegratortesttask.di.CityList
+package ru.vyakhirev.bellintegratortesttask.di.citylist
 
 import dagger.Component
 import ru.vyakhirev.bellintegratortesttask.di.AppComponent
-import ru.vyakhirev.bellintegratortesttask.di.FeatureScope
+import ru.vyakhirev.bellintegratortesttask.di.CityListScope
 import ru.vyakhirev.bellintegratortesttask.presentation.ListCityFragment
 
 @Component(
@@ -10,7 +10,7 @@ import ru.vyakhirev.bellintegratortesttask.presentation.ListCityFragment
     modules = [CityListModule::class]
 )
 
-@FeatureScope
+@CityListScope
 interface CityListComponent {
 
     companion object {
@@ -21,8 +21,6 @@ interface CityListComponent {
                 .build()
         }
     }
-
-//    fun inject(mainActivity: MainActivity)
 
     fun inject(listCityFragment: ListCityFragment)
 }

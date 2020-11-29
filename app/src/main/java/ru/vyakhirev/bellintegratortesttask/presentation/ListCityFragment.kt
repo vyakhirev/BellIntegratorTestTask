@@ -85,13 +85,15 @@ class ListCityFragment : Fragment(), MainView {
             .repeat()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
+            .subscribe({
                 if (isOnline(context)) {
                     presenter.getUsersAddCityTemp()
                     showMessage("Weather was updated")
                 } else
                     showMessage("Offline mode! Check your internet connection!")
-            }
+            }, {
+                Log.d("deb", it.message.toString())
+            })
     }
 
     private fun isOnline(context: Context): Boolean {

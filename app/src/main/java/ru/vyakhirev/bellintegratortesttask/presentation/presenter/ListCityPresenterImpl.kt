@@ -8,17 +8,17 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import ru.vyakhirev.bellintegratortesttask.data.model.CityModel
 import ru.vyakhirev.bellintegratortesttask.data.model.CityTemperature
-import ru.vyakhirev.bellintegratortesttask.domain.GetUsersCityWeather
+import ru.vyakhirev.bellintegratortesttask.domain.GetUsersCityUseCase
 import ru.vyakhirev.bellintegratortesttask.domain.GetWeatherUseCase
-import ru.vyakhirev.bellintegratortesttask.domain.PreloadCityToDb
+import ru.vyakhirev.bellintegratortesttask.domain.PresetCityUseCase
 import ru.vyakhirev.bellintegratortesttask.presentation.view.MainView
 import javax.inject.Inject
 
 class ListCityPresenterImpl
 @Inject constructor(
     private val getWeatherUseCase: GetWeatherUseCase,
-    private val getUsersCityWeather: GetUsersCityWeather,
-    private val preloadCityToDb: PreloadCityToDb
+    private val getUsersCityUseCase: GetUsersCityUseCase,
+    private val presetCityUseCase: PresetCityUseCase
 ) : ListCityPresenter {
 
     private var view: MainView? = null
@@ -49,7 +49,7 @@ class ListCityPresenterImpl
 
     override fun addPresetCitiesToDb() {
         presetCities.forEach {
-            preloadCityToDb.execute(CityModel(it))
+            presetCityUseCase.execute(CityModel(it))
         }
     }
 
@@ -71,7 +71,7 @@ class ListCityPresenterImpl
     override fun getUsersAddCityTemp() {
         Log.d("kavt", "GetUserAddCityTemp")
         disposable.add(
-            getUsersCityWeather.execute()
+            getUsersCityUseCase.execute()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
